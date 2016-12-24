@@ -2,45 +2,38 @@
 # Contributor:  Martin Wimpress <code@flexion.org>
 
 _ver=1.17
-_pkgbase=mate-polkit
-pkgname="${_pkgbase}"
+_pkgbase=mate-terminal
+pkgname=(${_pkgbase})
 pkgver=${_ver}.0
 pkgrel=${_pkgrel}
-pkgdesc="PolicyKit integration for the MATE desktop"
+pkgdesc="The MATE Terminal Emulator (GTK3 version [EXPERIMENTAL])"
 url="http://mate-desktop.org"
 arch=('i686' 'x86_64')
-license=('LGPL')
-depends=('gtk2' 'gtk3' 'polkit' 'accountsservice')
-makedepends=('gobject-introspection' 'mate-common')
+license=('GPL')
+depends=('dbus' 'dconf' 'glib2' 'libsm' 'mate-desktop>=1.17' 'vte3')
+makedepends=('docbook2x' 'mate-common' 'yelp-tools')
+optdepends=('yelp: for reading MATE help documents')
+groups=('mate-extra')
+#conflicts=("${_pkgbase}")
 
 md5sums=(SKIP)
 source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
 prepare() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     NOCONFIGURE=1 /usr/bin/mate-autogen
-    cd "${srcdir}"
-}
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+ }
 
 build() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     ./configure \
         --prefix=/usr \
-        --libexecdir=/usr/lib/${pkgbase} \
-        --sysconfdir=/etc \
-        --localstatedir=/var \
         --with-gtk=3.0 \
-        --enable-introspection \
         --disable-static
     make
 }
 
 package() {
-    pkgdesc+=' (GTK3 version)'
-    groups=('mate')
-    #conflicts=("${pkgbase}")
-    depends=('gtk3' 'polkit')
-    #provides=('mate-polkit=1.17.0')
-
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     make DESTDIR="${pkgdir}" install
 }

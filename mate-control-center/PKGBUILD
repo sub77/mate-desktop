@@ -16,6 +16,14 @@ depends=('autoconf' 'automake' 'gettext' 'gtk-doc' 'intltool' 'libtool'
 groups=('mate')
 url="http://mate-desktop.org"
 
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+}
+
+
 build() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     ./configure \

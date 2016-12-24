@@ -2,45 +2,39 @@
 # Contributor:  Martin Wimpress <code@flexion.org>
 
 _ver=1.17
-_pkgbase=mate-polkit
+_pkgbase=mozo
 pkgname="${_pkgbase}"
 pkgver=${_ver}.0
 pkgrel=${_pkgrel}
-pkgdesc="PolicyKit integration for the MATE desktop"
+pkgdesc="MATE menu specifications"
 url="http://mate-desktop.org"
 arch=('i686' 'x86_64')
-license=('LGPL')
-depends=('gtk2' 'gtk3' 'polkit' 'accountsservice')
+license=('GPL')
+depends=('glib2' 'python2')
 makedepends=('gobject-introspection' 'mate-common')
+groups=('mate' 'mate')
 
 md5sums=(SKIP)
 source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+
 prepare() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     NOCONFIGURE=1 /usr/bin/mate-autogen
-    cd "${srcdir}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
 }
 
 build() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
-    ./configure \
+    PYTHON=/usr/bin/python2 ./configure \
         --prefix=/usr \
-        --libexecdir=/usr/lib/${pkgbase} \
         --sysconfdir=/etc \
         --localstatedir=/var \
-        --with-gtk=3.0 \
-        --enable-introspection \
+        --enable-python \
         --disable-static
     make
 }
 
 package() {
-    pkgdesc+=' (GTK3 version)'
-    groups=('mate')
-    #conflicts=("${pkgbase}")
-    depends=('gtk3' 'polkit')
-    #provides=('mate-polkit=1.17.0')
-
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     make DESTDIR="${pkgdir}" install
 }

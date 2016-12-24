@@ -1,42 +1,40 @@
-# Maintainer:  eadrom <eadrom@archlinux.info>
+# Maintainer:   Νικόλαος Κυριάκος Φυτίλης <n-fit@live.com>
+# Contributor:  eadrom <eadrom@archlinux.info>
 # Contributor:  Martin Wimpress <code@flexion.org>
 
 _ver=1.17
-_pkgbase=mate-session-manager
+_pkgbase=mate-icon-theme-faenza
 pkgname="${_pkgbase}"
 pkgver=${_ver}.0
 pkgrel=${_pkgrel}
-pkgdesc="The MATE Panel"
+pkgdesc="Faenza icon theme for MATE"
 url="http://mate-desktop.org"
-arch=('i686' 'x86_64')
+arch=('any')
 #provides=("${_pkgbase}" "${_pkgbase}")
 #conflicts=("${_pkgbase}" "${_pkgbase}")
-license=('GPL')
-depends=('mate-common' 'xmlto' 'xtrans' 'gtk3' 'mate-desktop>=1.17' 'mate-polkit>=1.17' 'mate-settings-daemon>=1.17')
-makedepends=('mate-common' 'xmlto' 'xtrans' 'gtk3' 'mate-desktop>=1.17' 'mate-polkit>=1.17' 'mate-settings-daemon>=1.17')
-groups=('mate')
+license=('LGPL')
+depends=('gtk-update-icon-cache')
+makedepends=('git' 'icon-naming-utils' 'mate-common>=1.17')
+options=(!strip)
+groups=('mate-extra')
 
 md5sums=(SKIP)
 source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
 prepare() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     NOCONFIGURE=1 /usr/bin/mate-autogen
-    cd "${srcdir}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
 }
 
 build() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     ./configure \
-        --prefix=/usr \
-        --libexecdir=/usr/lib/${pkgbase} \
-        --sysconfdir=/etc \
-        --localstatedir=/var \
-        --with-gtk=3.0 \
-        --disable-upower
+        --prefix=/usr
     make
 }
 
 package() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     make DESTDIR="${pkgdir}" install
+    rm -f "${pkgdir}/usr/share/icons/matefaenza/icon-theme.cache"
 }

@@ -2,8 +2,8 @@
 # Contributor:  Martin Wimpress <code@flexion.org>
 
 _ver=1.17
-pkgbase=libmateweather
-pkgname=(${pkgbase})
+_pkgbase=libmateweather
+pkgname="${_pkgbase}"
 pkgver=${_ver}.0
 pkgrel=${_pkgrel}
 #provides=("${_pkgbase}")
@@ -19,11 +19,11 @@ source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#br
 prepare() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     NOCONFIGURE=1 /usr/bin/mate-autogen
-    cd "${srcdir}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
 }
 
 build() {
-    cd "${srcdir}/${pkgbase}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
 
     ./configure \
         --prefix=/usr \

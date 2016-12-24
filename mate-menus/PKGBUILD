@@ -2,7 +2,8 @@
 # Contributor:  Martin Wimpress <code@flexion.org>
 
 _ver=1.17
-pkgname=mate-menus
+_pkgbase=mate-menus
+pkgname="${_pkgbase}"
 pkgver=${_ver}.0
 pkgrel=${_pkgrel}
 pkgdesc="MATE menu specifications"
@@ -13,8 +14,16 @@ depends=('glib2' 'python2')
 makedepends=('gobject-introspection' 'mate-common')
 groups=('mate' 'mate')
 
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+}
+
 build() {
-    cd "${srcdir}/${pkgname}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
     PYTHON=/usr/bin/python2 ./configure \
         --prefix=/usr \
         --sysconfdir=/etc \
@@ -25,6 +34,6 @@ build() {
 }
 
 package() {
-    cd "${srcdir}/${pkgname}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
     make DESTDIR="${pkgdir}" install
 }

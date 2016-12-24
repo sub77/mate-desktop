@@ -2,8 +2,8 @@
 # Contributor:  Martin Wimpress <code@flexion.org>
 
 _ver=1.17
-pkgbase=mate-sensors-applet
-pkgname=mate-sensors-applet
+_pkgbase=mate-sensors-applet
+pkgname="${_pkgbase}"
 pkgver=${_ver}.0
 pkgrel=${_pkgrel}
 pkgdesc="A MATE Panel applet to display readings from hardware sensors, including CPU temperature, fan speeds and voltage readings."
@@ -17,18 +17,16 @@ optdepends=('yelp: for reading MATE help documents')
 groups=('mate-extra')
 #conflicts=("${pkgbase}")
 
-
 md5sums=(SKIP)
 source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+
 prepare() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     NOCONFIGURE=1 /usr/bin/mate-autogen
-    cd "${srcdir}"
 }
 
 build() {
-    echo "${srcdir}/${pkgbase}"
-    cd "${srcdir}/${pkgbase}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
     ./configure \
         --prefix=/usr \
         --libexecdir=/usr/lib/mate-sensors-applet \
@@ -38,7 +36,7 @@ build() {
 
 package() {
     pkgdesc+=' (GTK3 version)'
-    cd "${srcdir}/${pkgbase}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
     sudo rm -f /usr/share/locale/ku_IQ/LC_MESSAGES/mate-sensors-applet.mo
     make DESTDIR="${pkgdir}" install
 }
