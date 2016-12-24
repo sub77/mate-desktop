@@ -1,9 +1,3 @@
-#!/bin/bash
-
-export _pkgrel=3
-
-base=/home/sub77/mate-desktop
-
 core="
 mate-common
 mate-desktop
@@ -28,30 +22,25 @@ mate-screensaver
 mate-sensors-applet
 mate-system-monitor
 mate-user-share
-mate-utils pluma
+mate-utils 
+mate-terminal
 "
 
 extra="
+engrampa
 marco
 mate-control-center
+mate-power-manager
 python-caja
+caja-extensions
+pluma
+mate-icon-theme-faenza
+mate-icon-theme
+mozo
 "
 
 test="
-mate-common
 "
 
 excluded="
-caja-extensions
-mate-power-manager
 "
-
-#for pkgbase in ${core} ${main} ${extra}
-for pkgbase in ${test}
- do
-  cd "$base"/"$pkgbase"
-   echo -e 'change dir -> '"$base/$pkgbase"
-    makepkg -i -d
-    cd $base
- done
-
