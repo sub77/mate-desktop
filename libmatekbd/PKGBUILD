@@ -1,0 +1,40 @@
+# Maintainer:   Νικόλαος Κυριάκος Φυτίλης <n-fit@live.com>
+# Contributor:  eadrom <eadrom@archlinux.info>
+# Contributor:  Martin Wimpress <code@flexion.org>
+
+_ver=1.17
+_pkgbase=libmatekbd
+pkgname="${_pkgbase}"
+pkgver=${_ver}.0
+pkgrel=${_pkgrel}
+pkgdesc="MATE keyboard library (GTK3 version)"
+url="http://mate-desktop.org"
+arch=('i686' 'x86_64')
+#provides=("${_pkgbase}" "${_pkgbase}")
+#conflicts=("${_pkgbase}" "${_pkgbase}")
+license=('LGPL')
+groups=('mate')
+depends=('dconf' 'gtk3' 'iso-codes' 'libxklavier')
+makedepends=('mate-common>=1.17')
+
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}"
+}
+
+build() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    ./configure \
+        --prefix=/usr \
+        --with-gtk=3.0 \
+        --disable-static
+    make
+}
+
+package() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}

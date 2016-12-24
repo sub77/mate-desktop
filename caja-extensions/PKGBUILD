@@ -1,0 +1,95 @@
+# Maintainer:   Νικόλαος Κυριάκος Φυτίλης <n-fit@live.com>
+# Contributor:  eadrom <eadrom@archlinux.info>
+# Contributor:  Martin Wimpress <code@flexion.org>
+
+_ver=1.17
+_pkgbase=caja-extensions
+pkgname=('caja-extensions-common' 'caja-gksu' 'caja-image-converter' 'caja-open-terminal' 'caja-sendto' 'caja-share' 'caja-wallpaper')
+pkgver=${_ver}.0
+pkgrel=${_pkgrel}
+pkgdesc="MATE extensions for Caja (GTK3 version)"
+url="http://mate-desktop.org"
+arch=("i686" "x86_64")
+license=("GPL")
+depends=("caja>=1.17" "dbus-glib" "gksu" "gtk3" "gupnp" "imagemagick" "samba")
+groups=("mate-extra")
+makedepends=("mate-common>=1.17" "caja>=1.17")
+
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}"
+}
+
+build() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    PYTHON=/usr/bin/python2 ./configure \
+        --prefix=/usr \
+        --with-gtk=3.0
+    make
+}
+
+package_caja-extensions-common() {
+    pkgdesc="Caja extensions common files (GTK3 version)"
+    #conflicts=("caja-extensions-common" "caja-extensions-common")
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make -C po DESTDIR="${pkgdir}" install
+}
+
+package_caja-gksu() {
+    pkgdesc="Privilege granting extension for Caja using gksu (GTK3 version)"
+    depends=("caja>=1.17" "caja-extensions-common>=1.17" "gksu")
+    groups=("mate-extra")
+    #conflicts=("caja-gksu" "caja-gksu")
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make -C gksu DESTDIR="${pkgdir}" install
+}
+
+package_caja-image-converter() {
+    pkgdesc="A Caja extension for simple image conversions (GTK3 version)"
+    depends=("caja>=1.17" "caja-extensions-common>=1.17" "imagemagick")
+    groups=("mate-extra")
+    #conflicts=("caja-image-converter" "caja-image-converter")
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make -C image-converter DESTDIR="${pkgdir}" install
+}
+
+package_caja-open-terminal() {
+    pkgdesc="A Caja extension for opening terminals in arbitrary local paths (GTK3 version)"
+    depends=("caja>=1.17" "caja-extensions-common>=1.17" "glib2")
+    groups=("mate-extra")
+    #conflicts=("caja-open-terminal" "caja-open-terminal")
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make -C open-terminal DESTDIR="${pkgdir}" install
+}
+
+package_caja-sendto() {
+    pkgdesc="A Caja extension for sending files (GTK3 version)"
+    depends=("caja>=1.17" "caja-extensions-common>=1.17" "dbus-glib" "glib2" "gupnp")
+    groups=("mate-extra")
+    optdepends=("pidgin: Support for sending to instant messaging networks."
+                "gajim: Support for sending to Jabber.")
+    #conflicts=("caja-sendto" "caja-sendto")
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make -C sendto DESTDIR="${pkgdir}" install
+}
+
+package_caja-share() {
+    pkgdesc="A Caja extension to quickly share a folder (GTK3 version)"
+    depends=("caja>=1.17" "caja-extensions-common>=1.17" "samba")
+    groups=("mate-extra")
+    #conflicts=("caja-share" "caja-share")
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make -C share DESTDIR="${pkgdir}" install
+}
+
+package_caja-wallpaper() {
+    pkgdesc="A Caja extension to quickly set wallpaper (GTK3 version)"
+    depends=('caja>=1.17' 'caja-extensions-common>=1.17')
+    groups=('mate-extra')
+    #conflicts=('caja-wallpaper' 'caja-wallpaper')
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make -C wallpaper DESTDIR="${pkgdir}" install
+}

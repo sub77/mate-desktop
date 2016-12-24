@@ -1,0 +1,53 @@
+# Maintainer:   Νικόλαος Κυριάκος Φυτίλης <n-fit@live.com>
+# Contributor:  eadrom <eadrom@archlinux.info>
+# Contributor:  Martin Wimpress <code@flexion.org>
+
+_ver=1.17
+_pkgbase=mate-power-manager
+pkgname="${_pkgbase}"
+pkgver=${_ver}.0
+pkgrel=${_pkgrel}
+pkgdesc="Power management tool for the MATE desktop"
+url="http://mate-desktop.org"
+arch=('i686' 'x86_64')
+#provides=("${_pkgbase}" "${_pkgbase}")
+#conflicts=("${_pkgbase}" "${_pkgbase}")
+license=('GPL')
+depends=('dbus-glib' 'dconf' 'glib2' 'gtk3' 'gtk-update-icon-cache' 'libcanberra'
+             'libgnome-keyring' 'libnotify' 'libunique3' 'mate-desktop>=1.17' 'upower')
+makedepends=('docbook2x' 'docbook-xml' 'mate-common>=1.17' 'mate-panel>=1.17' 'xmlto' 'yelp-tools'
+             'gtk3' 'libunique3' 'mate-desktop>=1.17')
+optdepends=('mate-panel: Set brightness and inhibit power management from the panel'
+            'yelp: for reading MATE help documents')
+groups=('mate-extra')
+
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    #Work around a problem where the .sgml fails to parse.
+    #sed -e 's:@HAVE_DOCBOOK2MAN_TRUE@.*::' -i man/Makefile.in
+}
+
+build() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    ./configure \
+        --prefix=/usr \
+        --libexecdir=/usr/lib/${_pkgbase} \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --sbindir=/usr/bin \
+        --enable-applets \
+        --enable-unique \
+        --with-gtk=3.0 \
+        --disable-strict
+    make
+}
+
+package() {
+    pkgdesc+=' (GTK3 version)'
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}

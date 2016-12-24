@@ -1,0 +1,48 @@
+# Maintainer:   Νικόλαος Κυριάκος Φυτίλης <n-fit@live.com>
+# Contributor:  eadrom <eadrom@archlinux.info>
+# Contributor:  Martin Wimpress <code@flexion.org>
+
+_ver=1.17
+_pkgbase=mate-utils
+pkgname="${_pkgbase}"
+pkgver=${_ver}.0
+pkgrel=${_pkgrel}
+pkgdesc="Common MATE utilities for viewing disk usage, logs and fonts, taking screenshots, managing dictionaries and searching files"
+url="http://mate-desktop.org"
+arch=('i686' 'x86_64')
+#provides=("${_pkgbase}" "${_pkgbase}")
+#conflicts=("${_pkgbase}" "${_pkgbase}")
+license=('GPL')
+depends=('desktop-file-utils' 'glib2' 'gtk3' 'gtk-update-icon-cache'
+         'libcanberra' 'libgtop' 'libsm' 'zlib')
+makedepends=('mate-common>=1.17' 'mate-panel>=1.17' 'rarian' 'yelp-tools' 'gtk3')
+optdepends=('mate-panel: Look up words in dictionaries from the panel'
+            'yelp: for reading MATE help documents')
+groups=('mate-extra')
+
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}"
+}
+
+build() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    ./configure \
+        --prefix=/usr \
+        --libexecdir=/usr/lib/${_pkgbase} \
+        --with-gtk=3.0 \
+        --sysconfdir=/etc \
+        --enable-deprecated \
+        --disable-maintainer-flags \
+        --disable-static
+    make
+}
+
+package() {
+    pkgdesc+=' (GTK3 version)'
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}

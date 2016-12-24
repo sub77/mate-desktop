@@ -1,0 +1,42 @@
+# Maintainer:  eadrom <eadrom@archlinux.info>
+# Contributor:  Martin Wimpress <code@flexion.org>
+
+_ver=1.17
+_pkgbase=mate-session-manager
+pkgname="${_pkgbase}"
+pkgver=${_ver}.0
+pkgrel=${_pkgrel}
+pkgdesc="The MATE Panel"
+url="http://mate-desktop.org"
+arch=('i686' 'x86_64')
+#provides=("${_pkgbase}" "${_pkgbase}")
+#conflicts=("${_pkgbase}" "${_pkgbase}")
+license=('GPL')
+depends=('mate-common' 'xmlto' 'xtrans' 'gtk3' 'mate-desktop>=1.17' 'mate-polkit>=1.17' 'mate-settings-daemon>=1.17')
+makedepends=('mate-common' 'xmlto' 'xtrans' 'gtk3' 'mate-desktop>=1.17' 'mate-polkit>=1.17' 'mate-settings-daemon>=1.17')
+groups=('mate')
+
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}"
+}
+
+build() {
+    cd "${srcdir}/${pkgbase}"
+    ./configure \
+        --prefix=/usr \
+        --libexecdir=/usr/lib/${pkgbase} \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --with-gtk=3.0 \
+        --disable-upower
+    make
+}
+
+package() {
+    cd "${srcdir}/${pkgbase}"
+    make DESTDIR="${pkgdir}" install
+}

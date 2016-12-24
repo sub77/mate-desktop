@@ -1,0 +1,43 @@
+# Maintainer:   Νικόλαος Κυριάκος Φυτίλης <n-fit@live.com>
+# Contributor:  eadrom <eadrom@archlinux.info>
+# Contributor:  Martin Wimpress <code@flexion.org>
+
+_ver=1.17
+_pkgbase=pluma
+pkgname="${_pkgbase}"
+pkgver=${_ver}.0
+pkgrel=${_pkgrel}
+pkgdesc="A powerful text editor for MATE (GTK3 version)"
+url="http://mate-desktop.org"
+arch=('i686' 'x86_64')
+#provides=("${_pkgbase}" "${_pkgbase}")
+#conflicts=("${_pkgbase}" "${_pkgbase}")
+license=('GPL')
+optdepends=('yelp: for reading MATE help documents')
+groups=('mate-extra')
+
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    sed -i 's/python/python2/' plugins/externaltools/data/switch-c.tool.in
+}
+
+build() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    PYTHON=/usr/bin/python2 ./configure \
+        --prefix=/usr \
+        --libexecdir=/usr/lib/${_pkgbase} \
+        --with-gtk=3.0 \
+        --enable-gtk-doc=no \
+        --disable-python
+    make
+}
+
+package() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}

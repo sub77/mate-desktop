@@ -1,0 +1,47 @@
+# Maintainer:   Νικόλαος Κυριάκος Φυτίλης <n-fit@live.com>
+# Contributor:  eadrom <eadrom@archlinux.info>
+# Contributor:  Martin Wimpress <code@flexion.org>
+
+_ver=1.17
+_pkgbase=eom
+pkgname="${_pkgbase}"
+pkgver=${_ver}.0
+pkgrel=${_pkgrel}
+pkgdesc="An image viewing and cataloging program for MATE"
+url="http://mate-desktop.org"
+arch=('i686' 'x86_64')
+#provides=("${_pkgbase}" "${_pkgbase}")
+#conflicts=("${_pkgbase}" "${_pkgbase}")
+license=('GPL')
+depends=('dbus-glib' 'desktop-file-utils' 'glib2' 'gobject-introspection-runtime'
+         'gtk3' 'gtk-update-icon-cache' 'exempi' 'lcms2' 'libexif' 'libjpeg-turbo'
+         'librsvg' 'mate-desktop>=1.17' 'pygtk' 'python2-gobject2'
+         'startup-notification' 'zlib')
+makedepends=('gobject-introspection' 'mate-common>=1.17' 'yelp-tools' 'gtk3' 'mate-desktop>=1.17')
+optdepends=('yelp: for reading MATE help documents')
+groups=('mate-extra')
+
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}"
+}
+
+build() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    ./configure \
+        --prefix=/usr \
+        --localstatedir=/var \
+        --with-gtk=3.0 \
+        --with-librsvg \
+        --disable-python
+    make
+}
+
+package() {
+    pkgdesc+=' (GTK3 version)'
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,39 @@
+# Maintainer:  eadrom <eadrom@archlinux.info>
+# Contributor:  Martin Wimpress <code@flexion.org>
+
+_ver=1.17
+_pkgbase=mate-netbook
+pkgname=${_pkgbase}
+pkgver=${_ver}.0
+pkgrel=${_pkgrel}
+pkgdesc="A simple window management tool (GTK3 version [EXPERIMENTAL])."
+url="http://mate-desktop.org"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('glib2' 'gtk3' 'libfakekey' 'libwnck3' 'libunique3' 'mate-panel')
+makedepends=('mate-common')
+#conflicts=("${_pkgbase}")
+
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    patch -Np1 -i ../../noicons.patch
+}
+
+build() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    ./configure \
+        --prefix=/usr \
+        --libexec=/usr/lib/${_pkgbase} \
+        --sysconfdir=/etc \
+        --disable-static
+    make
+}
+
+package() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,43 @@
+# Maintainer:  eadrom <eadrom@archlinux.info>
+# Contributor:  Martin Wimpress <code@flexion.org>
+
+_ver=1.17
+pkgbase=libmateweather
+pkgname=(${pkgbase})
+pkgver=${_ver}.0
+pkgrel=${_pkgrel}
+#provides=("${_pkgbase}")
+pkgdesc="Provides access to weather information from the Internet."
+url="http://mate-desktop.org"
+arch=('i686' 'x86_64')
+license=('LGPL')
+depends=('dconf' 'glib2' 'gtk3' 'gtk-update-icon-cache' 'libsoup')
+makedepends=('mate-common')
+
+md5sums=(SKIP)
+source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
+prepare() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    NOCONFIGURE=1 /usr/bin/mate-autogen
+    cd "${srcdir}"
+}
+
+build() {
+    cd "${srcdir}/${pkgbase}"
+
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --with-gtk=3.0 \
+        --disable-static \
+        --disable-python \
+        --enable-locations-compression
+    make
+}
+
+package() {
+    pkgdesc+=' (GTK3 version)'
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}
