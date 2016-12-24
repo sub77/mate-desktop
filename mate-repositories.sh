@@ -9,7 +9,6 @@ eom
 libmatekbd
 libmatemixer
 libmateweather
-mate-menus
 mate-panel
 mate-applets
 mate-indicator-applet
@@ -43,4 +42,5 @@ test="
 "
 
 excluded="
+mate-menus
 "
