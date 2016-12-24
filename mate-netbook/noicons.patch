@@ -1,0 +1,36 @@
+From 82400890db33d3aaf7ee1ffde95a582195b527a2 Mon Sep 17 00:00:00 2001
+From: sub77 <sub77@ymail.com>
+Date: Sat, 24 Dec 2016 03:24:07 +0100
+Subject: [PATCH] remove task icons
+
+---
+ mate-window-picker-applet/applet.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/mate-window-picker-applet/applet.c b/mate-window-picker-applet/applet.c
+index 9629f9b..9610b75 100644
+--- a/mate-window-picker-applet/applet.c
++++ b/mate-window-picker-applet/applet.c
+@@ -125,7 +125,7 @@ cw_applet_fill (MatePanelApplet *applet,
+ {
+   WnckScreen *screen;
+   WinPickerApp *app;
+-  GtkWidget *eb, *tasks, *title;
++  GtkWidget *eb, *title;
+   gchar *ui_path;
+   GtkActionGroup *action_group;
+   GObjectClass *object_class;
+@@ -163,8 +163,8 @@ cw_applet_fill (MatePanelApplet *applet,
+   gtk_container_add (GTK_CONTAINER (applet), eb);
+   gtk_container_set_border_width (GTK_CONTAINER (eb), 0);
+ 
+-  tasks = app->tasks = task_list_get_default ();
+-  gtk_box_pack_start (GTK_BOX (eb), tasks, FALSE, FALSE, 0);
++  //tasks = app->tasks = task_list_get_default ();
++  //gtk_box_pack_start (GTK_BOX (eb), tasks, FALSE, FALSE, 0);
+ 
+   title = app->title = task_title_new ();
+   gtk_box_pack_start (GTK_BOX (eb), title, TRUE, TRUE, 0);
+-- 
+2.11.0
+
