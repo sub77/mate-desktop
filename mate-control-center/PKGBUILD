@@ -15,7 +15,7 @@ depends=('autoconf' 'automake' 'gettext' 'gtk-doc' 'intltool' 'libtool'
          'pkg-config')
 groups=('mate')
 url="http://mate-desktop.org"
-
+md5sums=(SKIP)
 source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
 
 prepare() {

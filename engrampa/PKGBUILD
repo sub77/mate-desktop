@@ -21,18 +21,13 @@ optdepends=('caja: file archiver extension'
             'yelp: for reading MATE help documents')
 groups=('mate-extra')
 #conflicts=("${_pkgbase}")
-        fr-rpm-bsdtar.patch)
-        
-
-sha1sums=('1245f5203b37b842cfaf818781b17cd22f1234b1'
-          '219b05a979bf6f249aaae27964f02345fd81168d')
 
 md5sums=(SKIP)
 source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#branch=master)
 prepare() {
-    cd "${srcdir}/${_pkgbase}-${pkgver}"
+	cd "${srcdir}/${_pkgbase}-${pkgver}"
     NOCONFIGURE=1 /usr/bin/mate-autogen
-    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    cp ../../fr-rpm-bsdtar.patch "${srcdir}/fr-rpm-bsdtar.patch"
     # This patch 'depends' on libarchive
     patch -Np1 -i "${srcdir}/fr-rpm-bsdtar.patch"
 }
