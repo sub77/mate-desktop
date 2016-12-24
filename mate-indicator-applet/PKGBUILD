@@ -14,7 +14,7 @@ arch=('i686' 'x86_64')
 #conflicts=("${_pkgbase}" "${_pkgbase}")
 license=('GPL' 'LGPL')
 depends=('dconf' 'dbus-glib' 'glib2' 'gtk3' 'gtk-update-icon-cache'
-         'libcanberra' 'libwnck3' 'libwnck3' 'libnotify')
+         'libcanberra' 'libwnck3' 'libwnck3' 'libnotify' 'libindicator-gtk3')
 makedepends=('mate-common>=1.17')
 
 md5sums=(SKIP)
@@ -22,7 +22,6 @@ source=(${_pkgbase}-${pkgver}::git+http://github.com/mate-desktop/${_pkgbase}#br
 prepare() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
     NOCONFIGURE=1 /usr/bin/mate-autogen
-    cd "${srcdir}"
 }
 
 build() {

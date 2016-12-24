@@ -24,7 +24,8 @@ prepare() {
 
 build() {
     cd "${srcdir}/${_pkgbase}-${pkgver}"
-    PYTHON=/usr/bin/python2 ./configure \
+    PYTHON=/usr/bin/python3
+    ./configure \
         --prefix=/usr \
         --sysconfdir=/etc \
         --localstatedir=/var \
